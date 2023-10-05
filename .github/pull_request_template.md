@@ -1,12 +1,3 @@
----
-name: Pull Request
-about: Submit a pull request to contribute to this project
-title: ''
-labels: ''
-assignees: ''
-
----
-
 **Related Issue(s)**
 
 Fixes #
@@ -22,6 +13,6 @@ Add any other context or screenshots about the pull request here.
 
 **Checklist:**
 
-- [ ] I have updated the documentation accordingly.
 - [ ] I have added tests to cover my changes.
-- [ ] All new and existing tests passed.
+- [ ] All new and existing tests passed locally.
+- [ ] Linter has passed locally.
