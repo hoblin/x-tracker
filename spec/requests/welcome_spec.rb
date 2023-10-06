@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe "Welcomes", type: :request do
   describe "GET /index" do
-    subject { get "/welcome/index" }
+    subject { get "/" }
 
     it "returns http success" do
       subject
