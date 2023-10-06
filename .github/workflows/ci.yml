@@ -41,6 +41,9 @@ jobs:
 
     - name: Run tests
       run: bundle exec rspec
+    - name: Display log
+      if: failure()
+      run: cat log/test.log
 
   lint:
     name: Run StandardRB
