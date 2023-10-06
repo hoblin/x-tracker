@@ -31,9 +31,9 @@ gem "cssbundling-rails"
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 gem "awesome_print", "~> 1.9"
+gem "data_migrate", "~> 9.2"
 gem "pry", "~> 0.14.2"
 gem "slim", "~> 5.1"
-gem "data_migrate", "~> 9.2"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -44,6 +44,7 @@ group :development, :test do
   gem "ffaker", "~> 2.23"
   gem "fuubar", "~> 2.5"
   gem "ordinare", "~> 0.4.0"
+  gem "rails-controller-testing", "~> 1.0"
   gem "rspec-rails", "~> 6.0"
   gem "slim-rails", "~> 3.6"
   gem "standard", "~> 1.31"
