@@ -1,0 +1,82 @@
+section.hero.is-fullheight.is-info
+  .hero-head
+    header.navbar
+      .container
+        .navbar-brand
+          a.navbar-item href="/"
+            | X-Tracker
+          span.navbar-burger.burger data-target="navbarMenuHeroA"
+            span
+            span
+            span
+        .navbar-menu id="navbarMenuHeroA"
+          .navbar-end
+            a.navbar-item href="/"
+              | Home
+            / a.navbar-item href="/about"
+            /   | About
+            / a.navbar-item href="/contact"
+            /   | Contact
+
+  .hero-body
+    .container
+      .columns.is-centered
+        .column.is-8
+          h1.title
+            | Welcome to X-Tracker!
+          p.subtitle
+            | Dive into the realm of transparent analytics with X-Tracker, an upcoming community-driven platform dedicated to tracking and visualizing Twitter engagements in real time.
+        .column.is-4
+      .columns.is-centered
+        .column.is-6
+          .box
+            h2.title.is-4.has-text-dark
+              | Why X-Tracker?
+            .content
+              h3 Transparency and Accountability:
+              ul
+                li Uncover real-time statistics on tweet engagements.
+                li Shed light on potential manipulations like shadow-banning and like-removals.
+                li Verify claims of Twitter interactions with data.
+              h3 Public Awareness:
+              ul
+                li Stay informed about the popularity and reach of trending tweets.
+                li Track and compare engagements on multiple tweets.
+                li Contribute by tracking tweets you're interested in.
+        .column.is-6
+          .box
+            h2.title.is-4.has-text-dark
+              | How It Will Work:
+            .content
+              ol
+                li
+                  strong User-Driven Tracking:
+                  p Users will be able to contribute by tracking tweets they are interested in.
+                  p Utilize a simple Tampermonkey script to start tracking right from your browser.
+                li
+                  strong Real-Time Updates:
+                  p X-Tracker will update engagement metrics in real time.
+                  p Visualize likes, retweets, comments, and more on interactive charts.
+                li
+                  strong Community Engagement:
+                  p Share interesting findings with the community.
+                  p Explore and compare metrics on a variety of tweets.
+      .columns.is-centered
+        .column.is-6
+          h2.title.is-4
+            | Coming Soon:
+          .content
+            ul
+              li User accounts for personalized tracking and notifications.
+              li Enhanced analytics with more metrics and comparison features.
+              li Community forums for discussions and insights sharing.
+        .column.is-6
+          h2.title.is-4.mb-5
+            | Stay tuned
+          .content
+            a.is-size-2.ml-2.mr-5 href="https://github.com/hoblin/x-tracker" target="_blank"
+              span.icon
+                i.fab.fa-github
+            a.is-size-2.ml-5 href="https://twitter.com/hoblon" target="_blank"
+              span.icon
+                i.fab.fa-twitter
