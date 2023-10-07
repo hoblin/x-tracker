@@ -1,22 +1,6 @@
 section.hero.is-fullheight.is-info
   .hero-head
-    header.navbar
-      .container
-        .navbar-brand
-          a.navbar-item href="/"
-            | X-Tracker
-          span.navbar-burger.burger data-target="navbarMenuHeroA"
-            span
-            span
-            span
-        .navbar-menu id="navbarMenuHeroA"
-          .navbar-end
-            a.navbar-item href="/"
-              | Home
-            / a.navbar-item href="/about"
-            /   | About
-            / a.navbar-item href="/contact"
-            /   | Contact
+    = render "shared/navbar"
 
   .hero-body
     .container

@@ -1,0 +1,34 @@
+section.hero.is-info
+  .hero-head
+    = render "shared/navbar"
+.section
+  .columns.is-centered
+    .column.is-1
+      h1.rotated.has-text-grey= @tweet.author_name
+    .column.is-10
+      .card
+        .card-content
+          .content
+            .columns.is-centered
+              .column.is-6
+                .box
+                  h2.title.is-4.has-text-dark
+                    | Tweet
+                  .content
+                    p= @tweet.body
+              .column.is-6
+                .box
+                  h2.title.is-4.has-text-dark
+                    | Metrics
+                  .content
+                    p
+                      | Likes: #{number_with_delimiter(@tweet.likes)}
+                    p
+                      | Retweets: #{number_with_delimiter(@tweet.reposts)}
+                    p
+                      | Comments: #{number_with_delimiter(@tweet.replies)}
+                    p
+                      | Views: #{number_with_delimiter(@tweet.views)}
+      .section
+        h4.title.is-4.has-text-dark
+          | Charts
