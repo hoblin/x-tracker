@@ -2,7 +2,7 @@ class TweetDecorator < Draper::Decorator
   delegate_all
 
   def combined_chart
-    h.area_chart combined_metrics_series, height: "20vh",library: chart_options
+    h.area_chart combined_metrics_series, height: "20vh", library: chart_options
   end
 
   def likes_chart
