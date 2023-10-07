@@ -10,6 +10,7 @@
 #  updated_at :datetime         not null
 #
 class Tweet < ApplicationRecord
+  has_many :tweet_metrics, dependent: :destroy
   validates :url, presence: true, uniqueness: true
 
   before_validation :set_author

@@ -10,11 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_07_001501) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_07_023127) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "data_migrations", primary_key: "version", id: :string, force: :cascade do |t|
+  end
+
+  create_table "tweet_metrics", force: :cascade do |t|
+    t.bigint "tweet_id", null: false
+    t.integer "replies", default: 0
+    t.integer "reposts", default: 0
+    t.integer "likes", default: 0
+    t.integer "bookmarks", default: 0
+    t.integer "views", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["tweet_id", "created_at"], name: "index_tweet_metrics_on_tweet_id_and_created_at", unique: true
+    t.index ["tweet_id"], name: "index_tweet_metrics_on_tweet_id"
   end
 
   create_table "tweets", force: :cascade do |t|
@@ -25,4 +38,5 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_07_001501) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "tweet_metrics", "tweets"
 end
