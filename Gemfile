@@ -30,6 +30,7 @@ gem "cssbundling-rails"
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
+gem "actionpack-action_caching", "~> 1.2"
 gem "awesome_print", "~> 1.9"
 gem "chartkick", "~> 5.0"
 gem "data_migrate", "~> 9.2"
