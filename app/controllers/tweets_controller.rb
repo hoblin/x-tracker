@@ -1,4 +1,6 @@
 class TweetsController < ApplicationController
+  caches_action :index, :show, expires_in: 15.minutes
+
   def index
     @tweets = Tweet.first(10).map(&:decorate)
 

@@ -36,6 +36,8 @@ GEM
       rack-test (>= 0.6.3)
       rails-dom-testing (~> 2.2)
       rails-html-sanitizer (~> 1.6)
+    actionpack-action_caching (1.2.2)
+      actionpack (>= 4.0.0)
     actiontext (7.1.0)
       actionpack (= 7.1.0)
       activerecord (= 7.1.0)
@@ -330,6 +332,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  actionpack-action_caching (~> 1.2)
   annotate (~> 3.2)
   awesome_print (~> 1.9)
   better_errors (~> 2.10)
