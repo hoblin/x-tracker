@@ -115,22 +115,22 @@ class TweetDecorator < Draper::Decorator
   end
 
   def likes_metric
-    @likes_metric ||= {name: "Likes", data: object.tweet_metrics.group_by_minute(:created_at).maximum(:likes)}
+    @likes_metric ||= {name: "Likes", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:likes)}
   end
 
   def replies_metric
-    @replies_metric ||= {name: "Replies", data: object.tweet_metrics.group_by_minute(:created_at).maximum(:replies)}
+    @replies_metric ||= {name: "Replies", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:replies)}
   end
 
   def reposts_metric
-    @reposts_metric ||= {name: "Reposts", data: object.tweet_metrics.group_by_minute(:created_at).maximum(:reposts)}
+    @reposts_metric ||= {name: "Reposts", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:reposts)}
   end
 
   def bookmarks_metric
-    @bookmarks_metric ||= {name: "Bookmarks", data: object.tweet_metrics.group_by_minute(:created_at).maximum(:bookmarks)}
+    @bookmarks_metric ||= {name: "Bookmarks", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:bookmarks)}
   end
 
   def views_metric
-    @views_metric ||= {name: "Views", data: object.tweet_metrics.group_by_minute(:created_at).maximum(:views)}
+    @views_metric ||= {name: "Views", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:views)}
   end
 end
