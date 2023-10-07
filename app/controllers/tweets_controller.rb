@@ -1,6 +1,6 @@
 class TweetsController < ApplicationController
   def index
-    @tweets = Tweet.all
+    @tweets = Tweet.first(10).map(&:decorate)
 
     respond_to do |format|
       format.html # renders index.html.slim
@@ -8,7 +8,7 @@ class TweetsController < ApplicationController
   end
 
   def show
-    @tweet = Tweet.find(params[:id])
+    @tweet = Tweet.find(params[:id]).decorate
 
     respond_to do |format|
       format.html # renders show.html.slim

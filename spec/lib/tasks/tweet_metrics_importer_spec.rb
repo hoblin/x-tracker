@@ -52,7 +52,7 @@ RSpec.describe Tasks::TweetMetricsImporter do
     let(:batch) do
       [
         {
-          "likes" => 42,
+          "count" => 42,
           "created_at" => time,
           "updated_at" => time
         }
@@ -104,7 +104,7 @@ RSpec.describe Tasks::TweetMetricsImporter do
   describe ".transform_row" do
     it "transforms a row" do
       row = {
-        "likes" => 42,
+        "count" => 42,
         "created_at" => time,
         "updated_at" => time
       }

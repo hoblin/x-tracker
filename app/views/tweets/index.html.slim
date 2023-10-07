@@ -19,14 +19,14 @@ section.hero.is-info
                   p class="subtitle is-6"
                     = tweet.body.truncate(280)
               .content
-                / TODO: render a small chart here
+                = tweet.combined_chart
             footer.card-footer
-              = link_to tweet_path(tweet), class: "card-footer-item" do
+              = link_to tweet_path(tweet), class: "card-footer-item primary" do
                 span View Metrics
                 span.icon
-                  i class="fa fa-chevron-right"
+                  i class="fa fa-chart-line"
               = link_to tweet.url, class: "card-footer-item", target: "_blank" do
                 span View Tweet
                 span.icon
-                  i class="fa fa-chevron-right"
+                  i class="fa fa-twitter"
     .column.is-1
