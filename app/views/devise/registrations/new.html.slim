@@ -1,0 +1,29 @@
+h2.title Sign up
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+  = render "devise/shared/error_messages", resource: resource
+
+  .field
+    = f.label :username, class: 'label'
+    .control
+      = f.text_field :username, autofocus: true, autocomplete: "username", class: 'input'
+
+  .field
+    = f.label :password, class: 'label'
+    - if @minimum_password_length
+      em
+        = @minimum_password_length
+        | characters minimum
+    .control
+      = f.password_field :password, autocomplete: "new-password", class: 'input'
+
+  .field
+    = f.label :password_confirmation, class: 'label'
+    .control
+      = f.password_field :password_confirmation, autocomplete: "new-password", class: 'input'
+
+  .field.is-grouped
+    .control
+      = f.submit "Sign up", class: 'button is-link'
+
+= render "devise/shared/links"

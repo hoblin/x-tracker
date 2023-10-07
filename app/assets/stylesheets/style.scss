@@ -18,6 +18,10 @@ h1.rotated {
   font-size: 3rem;
 }
 
+.hero.is-info .has-dark-text .title {
+  color: #000;
+}
+
 @media (max-width: 768px) {
   h1.rotated {
     transform: none;
