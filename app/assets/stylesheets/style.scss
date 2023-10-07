@@ -6,3 +6,24 @@
 .title {
   font-family: Source Code Pro;
 }
+
+h1.rotated {
+  transform: rotate(-90deg);
+  transform-origin: bottom left;
+  white-space: nowrap;
+  position: absolute;
+  bottom: 30vh;
+  left: 9vw;
+  font-family: Source Code Pro;
+  font-size: 3rem;
+}
+
+@media (max-width: 768px) {
+  h1.rotated {
+    transform: none;
+    position: static;
+    bottom: auto;
+    left: auto;
+    font-size: 2rem;
+  }
+}

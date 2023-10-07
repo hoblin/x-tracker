@@ -31,7 +31,10 @@ gem "cssbundling-rails"
 gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 gem "awesome_print", "~> 1.9"
+gem "chartkick", "~> 5.0"
 gem "data_migrate", "~> 9.2"
+gem "draper", "~> 4.0"
+gem "groupdate", "~> 6.4"
 gem "pry", "~> 0.14.2"
 gem "slim", "~> 5.1"
 gem "sqlite3", "~> 1.6"

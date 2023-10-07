@@ -1,0 +1,65 @@
+section.hero.is-info
+  .hero-head
+    = render "shared/navbar"
+.section
+  .columns.is-centered
+    .column.is-1
+      h1.rotated.has-text-grey= @tweet.author_name
+    .column.is-10
+      .card
+        .card-content
+          .content
+            .columns.is-centered
+              .column.is-6
+                h2.title.is-4.has-text-dark
+                  | Tweet
+                .content
+                  p= @tweet.body
+              .column.is-6
+                h2.title.is-4.has-text-dark
+                  | Metrics
+                .content
+                  p
+                    | Likes: #{number_with_delimiter(@tweet.likes)}
+                  p
+                    | Retweets: #{number_with_delimiter(@tweet.reposts)}
+                  p
+                    | Comments: #{number_with_delimiter(@tweet.replies)}
+                  p
+                    | Views: #{number_with_delimiter(@tweet.views)}
+      hr
+      .content
+        .card
+          .card-content
+            .content
+              h4.title.is-4.has-text-dark
+                | Likes
+              = @tweet.likes_chart
+      .content
+        .card
+          .card-content
+            .content
+              h4.title.is-4.has-text-dark
+                | Retweets
+              = @tweet.reposts_chart
+      .content
+        .card
+          .card-content
+            .content
+              h4.title.is-4.has-text-dark
+                | Comments
+              = @tweet.replies_chart
+      .content
+        .card
+          .card-content
+            .content
+              h4.title.is-4.has-text-dark
+                | Bookmarks
+              = @tweet.bookmarks_chart
+      .content
+        .card
+          .card-content
+            .content
+              h4.title.is-4.has-text-dark
+                | Views
+              = @tweet.views_chart

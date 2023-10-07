@@ -1,0 +1,16 @@
+header.navbar
+  .container
+    .navbar-brand
+      a.navbar-item href="/"
+        | X-Tracker
+      span.navbar-burger.burger data-target="navbarMenuHeroA"
+        span
+        span
+        span
+    .navbar-menu id="navbarMenuHeroA"
+      .navbar-end
+        a.navbar-item href="/"
+          | Home
+        = link_to "Tweets", tweets_path, class: "navbar-item"
+        / a.navbar-item href="/contact"
+        /   | Contact

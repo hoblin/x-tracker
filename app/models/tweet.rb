@@ -15,7 +15,49 @@ class Tweet < ApplicationRecord
 
   before_validation :set_author
 
+  def author_avatar_url
+    # TODO: Implement a way to get the avatar url from the tweet
+    "https://pbs.twimg.com/profile_images/1678305940481753089/g751T5c__400x400.jpg"
+  end
+
+  def author_url
+    "https://twitter.com/#{author}"
+  end
+
+  def author_name
+    "@#{author}"
+  end
+
+  def likes
+    last_metric&.likes
+  end
+
+  def reposts
+    last_metric&.reposts
+  end
+
+  def replies
+    last_metric&.replies
+  end
+
+  # TODO: Add quotes to the tweet metrics
+  # def quotes
+  #   last_metric&.quotes
+  # end
+
+  def bookmarks
+    last_metric&.bookmarks
+  end
+
+  def views
+    last_metric&.views
+  end
+
   private
+
+  def last_metric
+    @last_metric ||= tweet_metrics.last
+  end
 
   def set_author
     self.author = url&.split("/")&.fetch(3)

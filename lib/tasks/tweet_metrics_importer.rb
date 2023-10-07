@@ -22,7 +22,7 @@ module Tasks
     def self.transform_row(row)
       {
         tweet_id: tweet.id,
-        likes: row["likes"],
+        likes: row["count"],
         created_at: row["created_at"],
         updated_at: row["updated_at"]
       }
