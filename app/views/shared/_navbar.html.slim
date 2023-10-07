@@ -1,12 +1,11 @@
-header.navbar
-  .container
+header
+  nav.navbar role="navigation" aria-label="main navigation"
     .navbar-brand
       a.navbar-item href="/"
         | X-Tracker
-      span.navbar-burger.burger data-target="navbarMenuHeroA"
-        span
-        span
-        span
+      a.navbar-burger.burger data-target="navbarMenuHeroA" role="button" aria-label="menu" aria-expanded="false"
+        span aria-hidden="true"
+        span aria-hidden="true"
     .navbar-menu id="navbarMenuHeroA"
       .navbar-end
         a.navbar-item href="/"
