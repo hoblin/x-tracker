@@ -11,6 +11,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  tweet_id   :bigint           not null
+#  user_id    :bigint           not null
 #
 # Indexes
 #
@@ -20,6 +21,7 @@
 # Foreign Keys
 #
 #  fk_rails_...  (tweet_id => tweets.id)
+#  fk_rails_...  (user_id => users.id)
 #
 require "rails_helper"
 
@@ -27,6 +29,11 @@ RSpec.describe TweetMetric, type: :model do
   describe "associations" do
     it "belongs to a tweet" do
       association = described_class.reflect_on_association(:tweet)
+      expect(association.macro).to eq(:belongs_to)
+    end
+
+    it "belongs to a user" do
+      association = described_class.reflect_on_association(:user)
       expect(association.macro).to eq(:belongs_to)
     end
   end

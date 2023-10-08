@@ -8,9 +8,16 @@
 #  url        :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  user_id    :bigint           not null
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
 #
 class Tweet < ApplicationRecord
   has_many :tweet_metrics, dependent: :destroy
+  belongs_to :user
+
   validates :url, presence: true, uniqueness: true
 
   before_validation :set_author

@@ -11,6 +11,7 @@
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  tweet_id   :bigint           not null
+#  user_id    :bigint           not null
 #
 # Indexes
 #
@@ -20,7 +21,9 @@
 # Foreign Keys
 #
 #  fk_rails_...  (tweet_id => tweets.id)
+#  fk_rails_...  (user_id => users.id)
 #
 class TweetMetric < ApplicationRecord
   belongs_to :tweet
+  belongs_to :user
 end

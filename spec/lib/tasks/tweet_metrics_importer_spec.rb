@@ -2,6 +2,7 @@ require "rails_helper"
 require Rails.root.join("lib/tasks/tweet_metrics_importer")
 
 RSpec.describe Tasks::TweetMetricsImporter do
+  let!(:user) { create(:user) }
   let!(:tweet) { create(:tweet, id: 44) }
   let(:db_path) { "db/test-database.sqlite3" }
   let(:batch_size) { 10 }
@@ -41,6 +42,7 @@ RSpec.describe Tasks::TweetMetricsImporter do
     before do
       allow(described_class).to receive(:tweet).and_return(tweet)
       allow(described_class).to receive(:transform_row).and_return({
+        user_id: user.id,
         tweet_id: 44,
         likes: 42,
         created_at: time,
@@ -68,7 +70,7 @@ RSpec.describe Tasks::TweetMetricsImporter do
     context "with existing records" do
       context "with a different time" do
         before do
-          create(:tweet_metric, tweet: tweet, likes: 42, created_at: time - 1.day, updated_at: time - 1.day)
+          create(:tweet_metric, tweet: tweet, user: user, likes: 42, created_at: time - 1.day, updated_at: time - 1.day)
         end
 
         it "creates a new record" do
@@ -77,7 +79,7 @@ RSpec.describe Tasks::TweetMetricsImporter do
       end
 
       context "with the different likes" do
-        let!(:existing_tweet_metric) { create(:tweet_metric, tweet: tweet, likes: 43, created_at: time, updated_at: time) }
+        let!(:existing_tweet_metric) { create(:tweet_metric, user: user, tweet: tweet, likes: 43, created_at: time, updated_at: time) }
 
         it "updates the existing record" do
           expect { subject }.to_not change { TweetMetric.count }
@@ -88,6 +90,7 @@ RSpec.describe Tasks::TweetMetricsImporter do
       context "with the same time and likes" do
         before do
           create(:tweet_metric,
+            user: user,
             tweet: tweet,
             likes: 42,
             created_at: time,
@@ -109,6 +112,7 @@ RSpec.describe Tasks::TweetMetricsImporter do
         "updated_at" => time
       }
       expect(described_class.transform_row(row)).to eq({
+        user_id: user.id,
         tweet_id: 44,
         likes: 42,
         created_at: time,
