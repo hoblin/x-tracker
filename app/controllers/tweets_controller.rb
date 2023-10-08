@@ -20,6 +20,8 @@ class TweetsController < ApplicationController
         render json: @tweet.tweet_metrics.to_json
       end
     end
+  rescue ActiveRecord::RecordNotFound
+    record_not_found
   end
 
   def receive_metrics
@@ -41,6 +43,9 @@ class TweetsController < ApplicationController
   def track
     @tweet = Tweet.find(params[:id]).decorate
     @report_url = receive_metrics_url
+
+    # TODO: replace with cancancan
+    return record_not_found unless user_signed_in? && current_user == @tweet.user
 
     respond_to do |format|
       format.js { render layout: false, content_type: "application/javascript" }

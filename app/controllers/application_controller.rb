@@ -12,4 +12,8 @@ class ApplicationController < ActionController::Base
   def after_sign_in_path_for(resource)
     tweets_path
   end
+
+  def record_not_found
+    render plain: "404 Not Found", status: :not_found
+  end
 end
