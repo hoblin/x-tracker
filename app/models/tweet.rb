@@ -19,8 +19,9 @@ class Tweet < ApplicationRecord
   belongs_to :user
 
   validates :url, presence: true, uniqueness: true
+  validates :uuid, presence: true, uniqueness: true
 
-  before_validation :set_author
+  before_validation :set_author, :set_uuid
 
   def author_avatar_url
     # TODO: Implement a way to get the avatar url from the tweet
@@ -68,5 +69,9 @@ class Tweet < ApplicationRecord
 
   def set_author
     self.author = url&.split("/")&.fetch(3)
+  end
+
+  def set_uuid
+    self.uuid = SecureRandom.uuid if uuid.blank?
   end
 end

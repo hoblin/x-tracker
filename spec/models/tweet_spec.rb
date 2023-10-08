@@ -6,9 +6,14 @@
 #  author     :string
 #  body       :text
 #  url        :string           not null
+#  uuid       :uuid             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  user_id    :bigint           not null
+#
+# Indexes
+#
+#  index_tweets_on_uuid  (uuid) UNIQUE
 #
 # Foreign Keys
 #
@@ -44,6 +49,12 @@ RSpec.describe Tweet, type: :model do
       expect(new_tweet).to_not be_valid
       expect(new_tweet.errors.messages[:url]).to eq(["can't be blank"])
     end
+
+    it "validates uniqueness of uuid" do
+      new_tweet = Tweet.new(uuid: tweet.uuid)
+      expect(new_tweet).to_not be_valid
+      expect(new_tweet.errors.messages[:uuid]).to eq(["has already been taken"])
+    end
   end
 
   describe "callbacks" do
@@ -53,6 +64,11 @@ RSpec.describe Tweet, type: :model do
         expect(new_tweet).to be_valid
         expect(new_tweet.author).to eq("P_Kallioniemi")
       end
+    end
+
+    it "sets the uuid" do
+      new_tweet = Tweet.create!(url: "https://twitter.com/P_Kallioniemi/status/1674360288445964288", uuid: nil, user: user)
+      expect(new_tweet.uuid).not_to be_nil
     end
   end
 
