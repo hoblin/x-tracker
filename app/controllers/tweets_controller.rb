@@ -1,6 +1,6 @@
 class TweetsController < ApplicationController
   skip_forgery_protection only: %i[track receive_metrics]  # Skip CSRF protection for Tampermonkey POST requests
-  caches_action :index, :show, expires_in: 15.minutes
+  caches_action :index, :show, expires_in: 5.minutes
   before_action :authenticate_user!, only: %i[new create track]
 
   def index
