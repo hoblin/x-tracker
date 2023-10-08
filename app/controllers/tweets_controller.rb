@@ -1,6 +1,7 @@
 class TweetsController < ApplicationController
   skip_forgery_protection only: %i[track receive_metrics]  # Skip CSRF protection for Tampermonkey POST requests
   caches_action :index, :show, expires_in: 15.minutes
+  before_action :authenticate_user!, only: %i[new create track]
 
   def index
     @tweets = Tweet.first(10).map(&:decorate)
@@ -24,13 +25,30 @@ class TweetsController < ApplicationController
     record_not_found
   end
 
+  def new
+    @tweet = Tweet.new
+  end
+
+  def create
+    @tweet = current_user.tweets.new(create_tweet_params)
+
+    if @tweet.save
+      redirect_to @tweet
+    else
+      respond_to do |format|
+        format.turbo_stream { render turbo_stream: turbo_stream.replace(@tweet, partial: "tweets/form", locals: {tweet: @tweet}) }
+        format.html { render :new }
+      end
+    end
+  end
+
   def receive_metrics
     tweet = Tweet.find_by(uuid: tweet_params[:uuid])
     return render json: {error: "Tweet not found"}, status: :not_found unless tweet
 
     tweet.tweet_metrics.create!(metrics_params.merge(user: tweet.user))
 
-    tweet.update!(body: tweet_params[:body]) if tweet_params[:body].present?
+    tweet.update!(tweet_params.except(:uuid)) if tweet_params[:body].present?
 
     if tweet.body.blank?
       render json: {command: :fetch_tweet_details}
@@ -54,8 +72,12 @@ class TweetsController < ApplicationController
 
   private
 
+  def create_tweet_params
+    params.require(:tweet).permit(:url)
+  end
+
   def tweet_params
-    params.require(:tweet).permit(:uuid, :body)
+    params.require(:tweet).permit(:uuid, :body, :avatar)
   end
 
   def metrics_params

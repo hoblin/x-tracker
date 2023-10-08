@@ -47,7 +47,7 @@ RSpec.describe Tweet, type: :model do
     it "validates presence of url" do
       new_tweet = Tweet.new(url: nil)
       expect(new_tweet).to_not be_valid
-      expect(new_tweet.errors.messages[:url]).to eq(["can't be blank"])
+      expect(new_tweet.errors.messages[:url]).to eq(["can't be blank", "is invalid"])
     end
 
     it "validates uniqueness of uuid" do

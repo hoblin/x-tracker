@@ -6,6 +6,8 @@ section.hero.is-info
     .column.is-1
       h1.rotated.has-text-grey Tracked Tweets
     .column.is-10
+      .section
+        = link_to 'Add Tweet', new_tweet_path, class: 'button is-primary is-fullwidth is-large'
       - @tweets.each do |tweet|
           .card
             .card-content
@@ -17,7 +19,7 @@ section.hero.is-info
                   p class="title is-4"
                     = link_to tweet.author_name, tweet.author_url, target: "_blank"
                   p class="subtitle is-6"
-                    = tweet.body.truncate(280)
+                    = tweet.body&.truncate(280)
               .content
                 = tweet.combined_chart
             footer.card-footer

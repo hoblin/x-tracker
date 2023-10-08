@@ -4,7 +4,7 @@
 // @version      1.0
 // @description  Track a specific tweet metrics
 // @author       https://github.com/hoblin/x-tracker
-// @match        <%= @tweet.url %>
+// @match        <%= @tweet.match_url %>
 // @grant        GM_xmlhttpRequest
 // @require      https://code.jquery.com/jquery-3.6.0.min.js
 // ==/UserScript==
@@ -12,7 +12,7 @@
 (function ($) {
   "use strict";
 
-  const DEBUG = false; // Set to false to disable logging
+  const DEBUG = true; // Set to false to disable logging
   const reportURL = "<%= @report_url %>"
   const uuid = "<%= @tweet.uuid %>"
   const updateLimit = 5; // Number of updates before sending to metrics to the reportURL
@@ -21,6 +21,7 @@
   let globalObserver;
   let metrics = {likes: 0, reposts: 0, replies: 0, bookmarks: 0, views: 0};
   let updateCounter = 0;
+  let tweetDataRequired = false;
 
   function log(...args) {
     if (DEBUG) {
@@ -28,11 +29,33 @@
     }
   }
 
+  function getTweetText() {
+    return $('#react-root').find('article').find('div[lang]').text();
+  }
+
+  function getAvatar() {
+    let avatar = null;
+    let counter = 0;
+    $('#react-root').find('img').each(function () {
+      let url = $(this).attr('src');
+      if(url && url.indexOf('profile_images') > -1) {
+        counter += 1;
+        avatar = url;
+        if (counter > 1) {
+          return false;
+        }
+      }
+    });
+    return avatar;
+  }
+
   function sendMetrics() {
-    // Send metrics to the server along with the UUID
-    // {uuid: "1234-5678-9012-3456", likes: 123, reposts: 456, replies: 789, bookmarks: 1011, views: 1213}
+    console.log('Test avatar:', getAvatar());
     log("Sending metrics to reportURL:", metrics);
     let data = JSON.stringify({ tweet: { uuid: uuid }, metrics });
+    if (tweetDataRequired) {
+      data = JSON.stringify({ tweet: { uuid: uuid, body: getTweetText(), avatar: getAvatar() }, metrics });
+    }
     log("Sending data to reportURL:", data);
     GM_xmlhttpRequest({
       method: "POST",
@@ -43,6 +66,12 @@
       },
       onload: function (response) {
         log("Response from the server:", response);
+        // if response contains "{command: :fetch_tweet_details}"
+        // we need to fetch the tweet text and avatar
+        if (response.responseText.indexOf("fetch_tweet_details") > -1) {
+          tweetDataRequired = true;
+          sendMetrics();
+        }
       },
       onerror: function (error) {
         log("Error sending to the server:", error);
@@ -55,10 +84,7 @@
     return (
       ariaLabel &&
       typeof ariaLabel === "string" &&
-      ariaLabel.indexOf("replies") > -1 &&
-      ariaLabel.indexOf("reposts") > -1 &&
       ariaLabel.indexOf("likes") > -1 &&
-      ariaLabel.indexOf("bookmark") > -1 &&
       ariaLabel.indexOf("views") > -1
     );
   }
@@ -68,41 +94,49 @@
     if (checkNode(targetNode) === false) {
       return;
     }
-    // On any metric change, we update the stored value and increment the counter of the metric updates.
-    // When the counter reaches the updateLimit, we send the metrics to the reportURL
-    const ariaLabel = $(targetNode).attr("aria-label");
-    // extract the numbers from the aria-label
-    const numbers = ariaLabel.match(/\d+/g);
-    if (numbers) {
-      const replies = parseInt(numbers[0]);
-      const reposts = parseInt(numbers[1]);
-      const likes = parseInt(numbers[2]);
-      const bookmarks = parseInt(numbers[3]);
-      const views = parseInt(numbers[4]);
-      const newMetrics = { likes, reposts, replies, bookmarks, views };
-      log("Metrics extracted from aria-label:", newMetrics);
-      updateCounter += 1;
-      // send the metrics if any metric has changed from zero
-      if (
-        (replies > 0 && metrics.replies === 0) ||
-        (reposts > 0 && metrics.reposts === 0) ||
-        (likes > 0 && metrics.likes === 0) ||
-        (bookmarks > 0 && metrics.bookmarks === 0) ||
-        (views > 0 && metrics.views === 0)
-      ) {
-        log("Sending first metrics to reportURL:", metrics);
-        metrics = newMetrics;
-        sendMetrics();
-        updateCounter = 0;
-      }
 
-      // send the metrics if the counter reaches the updateLimit
-      if (updateCounter >= updateLimit) {
-        log("Sending metrics to reportURL:", metrics);
-        metrics = newMetrics;
-        sendMetrics();
-        updateCounter = 0;
+    const ariaLabel = $(targetNode).attr("aria-label");
+    const regex = /(\d+)\s+(\w+)/g;
+    let match;
+    let newMetrics = {
+      likes: 0,
+      reposts: 0,
+      replies: 0,
+      bookmarks: 0,
+      views: 0
+    };
+    // Iterate over all matches in the aria-label
+    while ((match = regex.exec(ariaLabel)) !== null) {
+      const value = parseInt(match[1]);
+      const name = match[2].toLowerCase();
+
+      if (Object.hasOwnProperty.call(newMetrics, name)) {
+        newMetrics[name] = value;
       }
+    }
+
+    log("Metrics extracted from aria-label:", newMetrics);
+    updateCounter += 1;
+    // send the metrics if any metric has changed from zero
+    if (
+      (newMetrics.replies > 0 && metrics.replies === 0) ||
+      (newMetrics.reposts > 0 && metrics.reposts === 0) ||
+      (newMetrics.likes > 0 && metrics.likes === 0) ||
+      (newMetrics.bookmarks > 0 && metrics.bookmarks === 0) ||
+      (newMetrics.views > 0 && metrics.views === 0)
+    ) {
+      log("Sending first metrics to reportURL:", metrics);
+      metrics = newMetrics;
+      sendMetrics();
+      updateCounter = 0;
+    }
+
+    // send the metrics if the counter reaches the updateLimit
+    if (updateCounter >= updateLimit) {
+      log("Sending metrics to reportURL:", metrics);
+      metrics = newMetrics;
+      sendMetrics();
+      updateCounter = 0;
     }
   }
 

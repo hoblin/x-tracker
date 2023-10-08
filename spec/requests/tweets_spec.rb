@@ -15,6 +15,20 @@ RSpec.describe "Tweets", type: :request do
       subject
       expect(response.body).to include(tweet.author)
     end
+
+    context "with a tweet with no body" do
+      let!(:tweet) { create(:tweet, body: nil) }
+
+      it "returns http success" do
+        subject
+        expect(response).to have_http_status(:success)
+      end
+
+      it "returns a list of tweets" do
+        subject
+        expect(response.body).to include(tweet.author)
+      end
+    end
   end
 
   describe "GET show" do
@@ -111,9 +125,9 @@ RSpec.describe "Tweets", type: :request do
     end
 
     context "for a non-logged in user" do
-      it "returns http not found" do
+      it "returns http 401" do
         subject
-        expect(response).to have_http_status(:not_found)
+        expect(response).to have_http_status(:unauthorized)
       end
     end
   end
