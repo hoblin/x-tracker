@@ -50,7 +50,6 @@
   }
 
   function sendMetrics() {
-    console.log('Test avatar:', getAvatar());
     log("Sending metrics to reportURL:", metrics);
     let data = JSON.stringify({ tweet: { uuid: uuid }, metrics });
     if (tweetDataRequired) {
