@@ -37,6 +37,7 @@ class TweetsController < ApplicationController
     @tweet = current_user.tweets.new(create_tweet_params)
 
     if @tweet.save
+      expire_action action: :index
       redirect_to @tweet
     else
       respond_to do |format|
@@ -53,6 +54,11 @@ class TweetsController < ApplicationController
     tweet.tweet_metrics.create!(metrics_params.merge(user: tweet.user))
 
     tweet.update!(tweet_params.except(:uuid)) if tweet_params[:body].present?
+
+    if tweet.tweet_metrics.count < 10
+      expire_action action: :index
+      expire_action action: :show, id: tweet.id
+    end
 
     if tweet.body.blank?
       render json: {command: :fetch_tweet_details}
