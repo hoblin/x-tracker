@@ -1,0 +1,147 @@
+// ==UserScript==
+// @name         XTracker - tracking <%= @tweet.author %> #<%= @tweet.id %>
+// @namespace    http://tampermonkey.net/
+// @version      1.0
+// @description  Track a specific tweet metrics
+// @author       https://github.com/hoblin/x-tracker
+// @match        <%= @tweet.url %>
+// @grant        GM_xmlhttpRequest
+// @require      https://code.jquery.com/jquery-3.6.0.min.js
+// ==/UserScript==
+
+(function ($) {
+  "use strict";
+
+  const DEBUG = true; // Set to false to disable logging
+  const reportURL = "<%= @report_url %>"
+  const updateLimit = 10; // Number of updates before sending to metrics to the reportURL
+
+  let labelFound = false;
+  let globalObserver;
+  let metrics = {likes: 0, reposts: 0, replies: 0, bookmarks: 0, views: 0};
+  let updateCounter = 0;
+
+  function log(...args) {
+    if (DEBUG) {
+      console.log(...args);
+    }
+  }
+
+  function sendMetrics() {
+    // Send metrics to the server along with the UUID
+    // {uuid: "1234-5678-9012-3456", likes: 123, reposts: 456, replies: 789, bookmarks: 1011, views: 1213}
+    log("Sending metrics to reportURL:", metrics);
+    let data = JSON.stringify({ uuid: uuid, ...metrics });
+    GM_xmlhttpRequest({
+      method: "POST",
+      url: reportURL,
+      data: data,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      onload: function (response) {
+        log("Response from the server:", response);
+      },
+      onerror: function (error) {
+        log("Error sending to the server:", error);
+      },
+    })
+  }
+
+  function updateMetrics(targetNode) {
+    // On any metric change, we update the stored value and increment the counter of the metric updates.
+    // When the counter reaches the updateLimit, we send the metrics to the reportURL
+    const ariaLabel = $(targetNode).attr("aria-label");
+    // extract the numbers from the aria-label
+    const numbers = ariaLabel.match(/\d+/g);
+    if (numbers) {
+      const replies = numbers[0];
+      const reposts = numbers[1];
+      const likes = numbers[2];
+      const bookmarks = numbers[3];
+      const views = numbers[4];
+      const metrics = {likes, reposts, replies, bookmarks, views};
+      log("Metrics updated:", metrics);
+      updateCounter += 1;
+      if (updateCounter >= updateLimit) {
+        log("Sending metrics to reportURL:", metrics);
+        sendMetrics();
+        updateCounter = 0;
+      }
+    }
+  }
+
+  function startObservingMetrics(targetNode) {
+    // Start observing the metrics label
+    log(
+      "Starting to observe metrics on label: ",
+      $(targetNode).attr("aria-label")
+    );
+    // send the initial metrics
+    updateMetrics(targetNode);
+    const config = { attributes: true, childList: true, subtree: true };
+    const callback = function (mutationsList, _observer) {
+      for (let mutation of mutationsList) {
+        if (
+          mutation.type === "attributes" &&
+          mutation.attributeName === "aria-label"
+        ) {
+          updateMetrics(mutation.target);
+        }
+      }
+    };
+
+    const observer = new MutationObserver(callback);
+    observer.observe(targetNode, config);
+  }
+
+  function findLabel() {
+    log("Trying to find label");
+    // look for the label with this attribute:
+    // aria-label="3 replies, 13 reposts, 110 likes, 1 bookmark, 5776 views"
+    // and start observing it
+    const targetNode = $('div[role="group"]').filter(function () {
+      const ariaLabel = $(this).attr("aria-label");
+      return (
+        ariaLabel &&
+        typeof ariaLabel === "string" &&
+        ariaLabel.indexOf("replies") > -1 &&
+        ariaLabel.indexOf("reposts") > -1 &&
+        ariaLabel.indexOf("likes") > -1 &&
+        ariaLabel.indexOf("bookmark") > -1 &&
+        ariaLabel.indexOf("views") > -1
+      );
+    })[0];
+
+    if (targetNode) {
+      log("Label found: ", $(targetNode).attr("aria-label"));
+      labelFound = true;
+      globalObserver.disconnect();
+      startObservingMetrics(targetNode);
+    }
+  }
+
+  function setupGlobalObserver() {
+    const config = { childList: true, subtree: true };
+    const callback = function () {
+      if (!labelFound) {
+        findLabel();
+      } else {
+        // If label is found, stop the global observer
+        globalObserver.disconnect();
+      }
+    };
+
+    globalObserver = new MutationObserver(callback);
+    globalObserver.observe(document, config);
+  }
+
+  $(document).ready(function () {
+    setupGlobalObserver();
+  });
+
+  // Schedule a page refresh every minute (60,000 milliseconds)
+  setTimeout(function() {
+    window.location.reload();
+  }, 60000);
+})(jQuery);
