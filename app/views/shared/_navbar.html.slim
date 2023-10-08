@@ -6,10 +6,28 @@ header
       a.navbar-burger.burger data-target="navbarMenuHeroA" role="button" aria-label="menu" aria-expanded="false"
         span aria-hidden="true"
         span aria-hidden="true"
-    .navbar-menu id="navbarMenuHeroA"
-      .navbar-end
-        a.navbar-item href="/"
-          | Home
+    #navbarMenuHeroA.navbar-menu
+      .navbar-start
+        = link_to "Home", root_path, class: "navbar-item"
         = link_to "Tweets", tweets_path, class: "navbar-item"
-        / a.navbar-item href="/contact"
-        /   | Contact
+      .navbar-end
+        .navbar-item
+          .buttons
+            - if user_signed_in?
+              = button_to destroy_user_session_path, method: :delete, class: "button is-info is-outlined is-inverted navbar-item"
+                span.icon
+                  i.fas.fa-sign-out-alt aria-hidden="true"
+                span Sign out
+              = button_to edit_user_registration_path, method: :get, class: "button is-link is-outlined is-inverted navbar-item mr-2"
+                span.icon
+                  i.fas.fa-user-cog aria-hidden="true"
+                span Edit profile
+            - else
+              = button_to new_user_session_path, method: :get, class: "button is-primary is-outlined is-inverted navbar-item mr-2"
+                span.icon
+                  i.fas.fa-sign-in-alt aria-hidden="true"
+                span Log in
+              = button_to new_user_registration_path, method: :get, class: "button is-link is-outlined is-inverted navbar-item mr-2"
+                span.icon
+                  i.fas.fa-user-plus aria-hidden="true"
+                span Sign up

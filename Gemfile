@@ -32,8 +32,10 @@ gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 gem "actionpack-action_caching", "~> 1.2"
 gem "awesome_print", "~> 1.9"
+gem "cancancan", "~> 3.5"
 gem "chartkick", "~> 5.0"
 gem "data_migrate", "~> 9.2"
+gem "devise", "~> 4.9"
 gem "draper", "~> 4.0"
 gem "groupdate", "~> 6.4"
 gem "pry", "~> 0.14.2"

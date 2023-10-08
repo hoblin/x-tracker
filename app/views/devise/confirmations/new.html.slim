@@ -1,0 +1,15 @@
+h2 Resend confirmation instructions
+
+= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f|
+  = render "devise/shared/error_messages", resource: resource
+
+  .field
+    = f.label :username, class: 'label'
+    .control
+      = f.text_field :username, autofocus: true, autocomplete: "username", class: 'input', value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.username)
+
+  .field.is-grouped
+    .control
+      = f.submit "Resend confirmation instructions", class: 'button is-link'
+
+= render "devise/shared/links"
