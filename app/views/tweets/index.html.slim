@@ -5,6 +5,7 @@ section.hero.is-info
   .columns.is-centered
     .column.is-1
       h1.rotated.has-text-grey Tracked Tweets
+    / Display top tweets with charts
     .column.is-10
       .section
         = link_to 'Add Tweet', new_tweet_path, class: 'button is-primary is-fullwidth is-large'
@@ -32,3 +33,29 @@ section.hero.is-info
                 span.icon
                   i class="fa fa-twitter"
     .column.is-1
+  / Display other tweets as cards
+  .columns.is-centered
+    .column.is-10
+      .columns.is-centered
+        - @other_tweets.each do |tweet|
+          .column.is-3
+            .card
+              .card-content
+                .media
+                  .media-left
+                    figure class="image is-48x48"
+                      img src="#{tweet.author_avatar_url}" class="is-rounded"
+                  .media-content
+                    .title.is-4
+                      = link_to tweet.author_name, tweet.url, target: "_blank"
+                .content
+                  = tweet.body&.truncate(280)
+              .card-footer
+                = link_to tweet_path(tweet), class: "card-footer-item primary" do
+                  span View Metrics
+                  span.icon
+                    i class="fa fa-chart-line"
+                = link_to tweet.url, class: "card-footer-item", target: "_blank" do
+                  span View Tweet
+                  span.icon
+                    i class="fa fa-twitter"
