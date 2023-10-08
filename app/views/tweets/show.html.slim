@@ -27,6 +27,16 @@ section.hero.is-info
                     | Comments: #{number_with_delimiter(@tweet.replies)}
                   p
                     | Views: #{number_with_delimiter(@tweet.views)}
+      .card
+        .card-content
+          .content
+            .columns.is-centered
+              .column.is-6
+                .content
+                  = link_to "Install tracker", track_user_js_path(@tweet), class: "button is-primary is-fullwidth is-large"
+              .column.is-6
+                .content
+                  = link_to "Start tracking", @tweet.url, class: "button is-primary is-fullwidth is-large", target: "_blank"
       hr
       .content
         .card

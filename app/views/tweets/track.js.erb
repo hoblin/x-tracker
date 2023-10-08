@@ -12,9 +12,10 @@
 (function ($) {
   "use strict";
 
-  const DEBUG = true; // Set to false to disable logging
+  const DEBUG = false; // Set to false to disable logging
   const reportURL = "<%= @report_url %>"
-  const updateLimit = 10; // Number of updates before sending to metrics to the reportURL
+  const uuid = "<%= @tweet.uuid %>"
+  const updateLimit = 5; // Number of updates before sending to metrics to the reportURL
 
   let labelFound = false;
   let globalObserver;
@@ -31,7 +32,8 @@
     // Send metrics to the server along with the UUID
     // {uuid: "1234-5678-9012-3456", likes: 123, reposts: 456, replies: 789, bookmarks: 1011, views: 1213}
     log("Sending metrics to reportURL:", metrics);
-    let data = JSON.stringify({ uuid: uuid, ...metrics });
+    let data = JSON.stringify({ tweet: { uuid: uuid }, metrics });
+    log("Sending data to reportURL:", data);
     GM_xmlhttpRequest({
       method: "POST",
       url: reportURL,
@@ -48,23 +50,56 @@
     })
   }
 
+  function checkNode(node) {
+    const ariaLabel = $(node).attr("aria-label");
+    return (
+      ariaLabel &&
+      typeof ariaLabel === "string" &&
+      ariaLabel.indexOf("replies") > -1 &&
+      ariaLabel.indexOf("reposts") > -1 &&
+      ariaLabel.indexOf("likes") > -1 &&
+      ariaLabel.indexOf("bookmark") > -1 &&
+      ariaLabel.indexOf("views") > -1
+    );
+  }
+
   function updateMetrics(targetNode) {
+    // make sure we have a valid targetNode
+    if (checkNode(targetNode) === false) {
+      return;
+    }
     // On any metric change, we update the stored value and increment the counter of the metric updates.
     // When the counter reaches the updateLimit, we send the metrics to the reportURL
     const ariaLabel = $(targetNode).attr("aria-label");
     // extract the numbers from the aria-label
     const numbers = ariaLabel.match(/\d+/g);
     if (numbers) {
-      const replies = numbers[0];
-      const reposts = numbers[1];
-      const likes = numbers[2];
-      const bookmarks = numbers[3];
-      const views = numbers[4];
-      const metrics = {likes, reposts, replies, bookmarks, views};
-      log("Metrics updated:", metrics);
+      const replies = parseInt(numbers[0]);
+      const reposts = parseInt(numbers[1]);
+      const likes = parseInt(numbers[2]);
+      const bookmarks = parseInt(numbers[3]);
+      const views = parseInt(numbers[4]);
+      const newMetrics = { likes, reposts, replies, bookmarks, views };
+      log("Metrics extracted from aria-label:", newMetrics);
       updateCounter += 1;
+      // send the metrics if any metric has changed from zero
+      if (
+        (replies > 0 && metrics.replies === 0) ||
+        (reposts > 0 && metrics.reposts === 0) ||
+        (likes > 0 && metrics.likes === 0) ||
+        (bookmarks > 0 && metrics.bookmarks === 0) ||
+        (views > 0 && metrics.views === 0)
+      ) {
+        log("Sending first metrics to reportURL:", metrics);
+        metrics = newMetrics;
+        sendMetrics();
+        updateCounter = 0;
+      }
+
+      // send the metrics if the counter reaches the updateLimit
       if (updateCounter >= updateLimit) {
         log("Sending metrics to reportURL:", metrics);
+        metrics = newMetrics;
         sendMetrics();
         updateCounter = 0;
       }
@@ -101,16 +136,7 @@
     // aria-label="3 replies, 13 reposts, 110 likes, 1 bookmark, 5776 views"
     // and start observing it
     const targetNode = $('div[role="group"]').filter(function () {
-      const ariaLabel = $(this).attr("aria-label");
-      return (
-        ariaLabel &&
-        typeof ariaLabel === "string" &&
-        ariaLabel.indexOf("replies") > -1 &&
-        ariaLabel.indexOf("reposts") > -1 &&
-        ariaLabel.indexOf("likes") > -1 &&
-        ariaLabel.indexOf("bookmark") > -1 &&
-        ariaLabel.indexOf("views") > -1
-      );
+      return checkNode(this);
     })[0];
 
     if (targetNode) {

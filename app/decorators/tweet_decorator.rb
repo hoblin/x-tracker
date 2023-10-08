@@ -109,8 +109,8 @@ class TweetDecorator < Draper::Decorator
       likes_metric,
       replies_metric,
       reposts_metric,
-      bookmarks_metric,
-      views_metric
+      bookmarks_metric
+      # views_metric TODO: enable after getting rid of chartkick and switching to custom Y axis
     ]
   end
 
