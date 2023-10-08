@@ -40,6 +40,9 @@ jobs:
         bundle config path vendor/bundle
         bundle install --jobs 4 --retry 3
 
+    - name: Create test credentials key file
+      run: echo "${{ secrets.RAILS_TEST_MASTER_KEY }}" > config/credentials/test.key
+
     - name: Precompile assets
       run: bundle exec rails assets:precompile
 
