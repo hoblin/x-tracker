@@ -21,11 +21,16 @@ module Tasks
 
     def self.transform_row(row)
       {
+        user_id: user.id,
         tweet_id: tweet.id,
         likes: row["count"],
         created_at: row["created_at"],
         updated_at: row["updated_at"]
       }
+    end
+
+    def self.user
+      @user ||= User.first
     end
 
     def self.tweet

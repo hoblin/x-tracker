@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_10_07_023127) do
+ActiveRecord::Schema[7.1].define(version: 2023_10_08_184323) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -26,6 +26,7 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_07_023127) do
     t.integer "views", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
     t.index ["tweet_id", "created_at"], name: "index_tweet_metrics_on_tweet_id_and_created_at", unique: true
     t.index ["tweet_id"], name: "index_tweet_metrics_on_tweet_id"
   end
@@ -36,7 +37,22 @@ ActiveRecord::Schema[7.1].define(version: 2023_10_07_023127) do
     t.string "url", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.uuid "uuid", default: -> { "gen_random_uuid()" }, null: false
+    t.string "avatar"
+    t.index ["uuid"], name: "index_tweets_on_uuid", unique: true
+  end
+
+  create_table "users", force: :cascade do |t|
+    t.string "username", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "tweet_metrics", "tweets"
+  add_foreign_key "tweet_metrics", "users"
+  add_foreign_key "tweets", "users"
 end

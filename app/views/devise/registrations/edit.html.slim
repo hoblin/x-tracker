@@ -1,0 +1,41 @@
+h2.title Edit #{resource_name.to_s.humanize}
+
+= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f|
+  = render "devise/shared/error_messages", resource: resource
+
+  .field
+    = f.label :username, class: 'label'
+    .control
+      = f.text_field :username, autofocus: true, autocomplete: "username", class: 'input'
+
+  .field
+    = f.label :password, class: 'label'
+    i #{"(leave blank if you don't want to change it)"}
+    .control
+      = f.password_field :password, autocomplete: "new-password", class: 'input'
+    - if @minimum_password_length
+      br
+      em #{@minimum_password_length} characters minimum
+
+  .field
+    = f.label :password_confirmation, class: 'label'
+    .control
+      = f.password_field :password_confirmation, autocomplete: "new-password", class: 'input'
+
+  .field
+    = f.label :current_password, class: 'label'
+    i #{"(we need your current password to confirm your changes)"}
+    .control
+      = f.password_field :current_password, autocomplete: "current-password", class: 'input'
+
+  .field.is-grouped
+    .control
+      = f.submit "Update", class: 'button is-link'
+
+h3 Cancel my account
+
+.notification
+  | Unhappy?
+  = button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete, class: 'button is-danger'
+
+= link_to "Back", :back, class: 'button is-light'

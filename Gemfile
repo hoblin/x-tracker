@@ -32,8 +32,10 @@ gem "tzinfo-data", platforms: %i[mingw mswin x64_mingw jruby]
 
 gem "actionpack-action_caching", "~> 1.2"
 gem "awesome_print", "~> 1.9"
+gem "cancancan", "~> 3.5"
 gem "chartkick", "~> 5.0"
 gem "data_migrate", "~> 9.2"
+gem "devise", "~> 4.9"
 gem "draper", "~> 4.0"
 gem "groupdate", "~> 6.4"
 gem "pry", "~> 0.14.2"
@@ -43,7 +45,6 @@ gem "sqlite3", "~> 1.6"
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "annotate", "~> 3.2"
-  gem "better_errors", "~> 2.10"
   gem "binding_of_caller", "~> 1.0"
   gem "debug", platforms: %i[mri mingw x64_mingw]
   gem "factory_bot_rails", "~> 6.2"
@@ -58,6 +59,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "better_errors", "~> 2.10"
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end
