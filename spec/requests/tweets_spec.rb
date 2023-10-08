@@ -31,6 +31,67 @@ RSpec.describe "Tweets", type: :request do
     end
   end
 
+  describe "POST /receive_metrics" do
+    subject { post "/tweets/receive_metrics", params: params }
+
+    let(:metric_params) { {likes: 11, reposts: 22, replies: 33, bookmarks: 44, views: 55} }
+    let(:params) { {uuid: uuid}.merge(metric_params) }
+    let(:uuid) { tweet.uuid }
+
+    context "when the tweet exists" do
+      it "creates a new tweet metric with the correct values" do
+        expect { subject }.to change { TweetMetric.count }.by(1)
+        expect(TweetMetric.last).to have_attributes(
+          tweet: tweet,
+          user: tweet.user,
+          likes: 11,
+          reposts: 22,
+          replies: 33,
+          bookmarks: 44,
+          views: 55
+        )
+      end
+
+      it "returns a success message" do
+        subject
+        expect(response.body).to eq({message: :ok}.to_json)
+      end
+    end
+
+    context "when the tweet does not exist" do
+      let(:uuid) { "non-existent-uuid" }
+
+      it "returns an error message" do
+        subject
+        expect(response.body).to eq({error: "Tweet not found"}.to_json)
+      end
+    end
+
+    context "when the tweet does not have a body" do
+      let(:tweet) { create(:tweet, body: nil) }
+      let(:uuid) { tweet.uuid }
+
+      it "returns a fetch tweet details command" do
+        subject
+        expect(response.body).to eq({command: :fetch_tweet_details}.to_json)
+      end
+
+      context "when tracker sends a body" do
+        let(:params) { {uuid: uuid, tweet: {body: "new body"}.merge(metric_params)} }
+
+        it "updates the tweet body" do
+          subject
+          expect(tweet.reload.body).to eq("new body")
+        end
+
+        it "returns a success message" do
+          subject
+          expect(response.body).to eq({message: :ok}.to_json)
+        end
+      end
+    end
+  end
+
   # Test signup/login/logout since we don't have a separate controller for users
   describe "POST /users" do
     let(:user_params) { attributes_for(:user) }
