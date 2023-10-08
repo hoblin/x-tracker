@@ -106,31 +106,36 @@ class TweetDecorator < Draper::Decorator
 
   def combined_metrics_series
     [
-      likes_metric,
-      replies_metric,
-      reposts_metric,
-      bookmarks_metric,
-      views_metric
+      likes_metric(resolution),
+      replies_metric(resolution),
+      reposts_metric(resolution),
+      bookmarks_metric(resolution)
+      # views_metric TODO: enable after getting rid of chartkick and switching to custom Y axis
     ]
   end
 
-  def likes_metric
-    @likes_metric ||= {name: "Likes", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:likes)}
+  def resolution
+    # resolution is 1 minute if we don't have many metrics and gradually increases up to 1 hour depending on the number of metrics
+    @resolution ||= object.tweet_metrics.count / 2000 + 1
   end
 
-  def replies_metric
-    @replies_metric ||= {name: "Replies", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:replies)}
+  def likes_metric(minutes = 5)
+    @likes_metric ||= {name: "Likes", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:likes)}
   end
 
-  def reposts_metric
-    @reposts_metric ||= {name: "Reposts", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:reposts)}
+  def replies_metric(minutes = 5)
+    @replies_metric ||= {name: "Replies", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:replies)}
   end
 
-  def bookmarks_metric
-    @bookmarks_metric ||= {name: "Bookmarks", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:bookmarks)}
+  def reposts_metric(minutes = 5)
+    @reposts_metric ||= {name: "Reposts", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:reposts)}
   end
 
-  def views_metric
-    @views_metric ||= {name: "Views", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: 5).maximum(:views)}
+  def bookmarks_metric(minutes = 5)
+    @bookmarks_metric ||= {name: "Bookmarks", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:bookmarks)}
+  end
+
+  def views_metric(minutes = 5)
+    @views_metric ||= {name: "Views", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:views)}
   end
 end

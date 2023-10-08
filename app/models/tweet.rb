@@ -8,16 +8,23 @@
 #  url        :string           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  user_id    :bigint           not null
+#
+# Foreign Keys
+#
+#  fk_rails_...  (user_id => users.id)
 #
 class Tweet < ApplicationRecord
   has_many :tweet_metrics, dependent: :destroy
-  validates :url, presence: true, uniqueness: true
+  belongs_to :user
 
-  before_validation :set_author
+  validates :url, presence: true, uniqueness: true, format: %r{https://(twitter|x).com/\w+/status/\d+}
+  validates :uuid, presence: true, uniqueness: true
+
+  before_validation :set_author, :set_uuid
 
   def author_avatar_url
-    # TODO: Implement a way to get the avatar url from the tweet
-    "https://pbs.twimg.com/profile_images/1678305940481753089/g751T5c__400x400.jpg"
+    avatar
   end
 
   def author_url
@@ -53,6 +60,10 @@ class Tweet < ApplicationRecord
     last_metric&.views
   end
 
+  def match_url
+    url.sub(%r{https://(twitter|x).com}, "https://*").sub(/\?.*/, "*")
+  end
+
   private
 
   def last_metric
@@ -60,6 +71,17 @@ class Tweet < ApplicationRecord
   end
 
   def set_author
+    return unless valid_url?
+
     self.author = url&.split("/")&.fetch(3)
+  end
+
+  def set_uuid
+    self.uuid = SecureRandom.uuid if uuid.blank?
+  end
+
+  def valid_url?
+    # Ensure the valid tweet url: https://twitter.com/P_Kallioniemi/status/1674360288445964288
+    url&.match?(%r{https://(twitter|x).com/\w+/status/\d+})
   end
 end

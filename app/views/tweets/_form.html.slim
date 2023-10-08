@@ -1,0 +1,11 @@
+#new_tweet
+  h3.has-text-centered.subtitle Add a New Tweet
+  = form_with model: tweet do |f|
+    .field.has-addons.is-large
+      .control.is-expanded.is-large
+        = f.text_field :url, class: "input is-large#{ ' is-danger' if tweet.errors[:url].any? }", placeholder: 'Enter Tweet URL'
+      .control
+        = f.submit 'Add Tweet', class: 'button is-primary is-large'
+    - tweet.errors.full_messages.each do |message|
+      p.help.is-danger.is-size-4
+        = message

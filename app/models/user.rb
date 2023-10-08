@@ -16,7 +16,16 @@
 class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
     :rememberable, :validatable
+
+  # TODO: Implement transfering tweets and tweet metrics to admin before deleting the user
+  has_many :tweets
+  has_many :tweet_metrics
+
   validates :username, presence: true, uniqueness: {case_sensitive: false}
+
+  def admin?
+    username == Rails.application.credentials.admin_user.username
+  end
 
   def email_required?
     false

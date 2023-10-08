@@ -45,7 +45,6 @@ gem "sqlite3", "~> 1.6"
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "annotate", "~> 3.2"
-  gem "better_errors", "~> 2.10"
   gem "binding_of_caller", "~> 1.0"
   gem "debug", platforms: %i[mri mingw x64_mingw]
   gem "factory_bot_rails", "~> 6.2"
@@ -60,6 +59,7 @@ group :development, :test do
 end
 
 group :development do
+  gem "better_errors", "~> 2.10"
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
 end
