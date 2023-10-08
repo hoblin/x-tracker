@@ -9,7 +9,7 @@ class TweetsController < ApplicationController
       .group("tweets.id")
       .order("metrics_count DESC")
     @tweets = scope.limit(10).map(&:decorate)
-    @other_tweets = scope.offset(10).limit(200).map(&:decorate)
+    @other_tweets = Tweet.limit(400).map(&:decorate)
     respond_to do |format|
       format.html # renders index.html.slim
     end
