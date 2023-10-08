@@ -43,11 +43,10 @@ jobs:
     - name: Create test credentials key file
       run: echo "${{ secrets.RAILS_TEST_MASTER_KEY }}" > config/credentials/test.key
 
-    - name: Check test key file content
-      run: cat config/credentials/test.key
-
     - name: Precompile assets
       run: bundle exec rails assets:precompile
+      env:
+        RAILS_ENV: test
 
     - name: Run tests
       run: bundle exec rspec
