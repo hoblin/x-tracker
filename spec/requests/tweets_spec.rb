@@ -16,6 +16,11 @@ RSpec.describe "Tweets", type: :request do
       expect(response.body).to include(tweet.author)
     end
 
+    it "returns status tags" do
+      subject
+      expect(response.body).to include("never tracked")
+    end
+
     context "with a tweet with no body" do
       let!(:tweet) { create(:tweet, body: nil) }
 
