@@ -1,11 +1,18 @@
 require "rails_helper"
 
 RSpec.describe TweetDecorator do
+<<<<<<< HEAD
   let(:tweet) { create(:tweet, created_at: 1.hour.ago) }
 
   describe "#combined_chart" do
     before { create_list(:tweet_metric, 10, tweet: tweet) }
 
+=======
+  let(:tweet) { create(:tweet) }
+  before { create_list(:tweet_metric, 10, tweet: tweet) }
+
+  describe "#combined_chart" do
+>>>>>>> main
     it "returns a chart container" do
       expect(tweet.decorate.combined_chart).to include('id="chart-')
     end
