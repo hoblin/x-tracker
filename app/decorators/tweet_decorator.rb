@@ -111,10 +111,10 @@ class TweetDecorator < Draper::Decorator
 
   def combined_metrics_series
     [
-      likes_metric(resolution),
-      replies_metric(resolution),
-      reposts_metric(resolution),
-      bookmarks_metric(resolution)
+      single_metric(:likes, resolution),
+      single_metric(:replies, resolution),
+      single_metric(:reposts, resolution),
+      single_metric(:bookmarks, resolution)
       # views_metric TODO: enable after getting rid of chartkick and switching to custom Y axis
     ]
   end
@@ -124,23 +124,35 @@ class TweetDecorator < Draper::Decorator
     @resolution ||= object.tweet_metrics.count / 2000 + 1
   end
 
-  def likes_metric(minutes = 5)
-    @likes_metric ||= {name: "Likes", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:likes)}
+  def caped_resolution(cap)
+    [resolution, cap].min
   end
 
-  def replies_metric(minutes = 5)
-    @replies_metric ||= {name: "Replies", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:replies)}
+  def single_metric(metric, minutes = nil)
+    minutes ||= caped_resolution(5)
+    instance_variable_get("@#{metric}_metric") || instance_variable_set("@#{metric}_metric", {
+      name: metric.capitalize,
+      data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(metric)
+    })
   end
 
-  def reposts_metric(minutes = 5)
-    @reposts_metric ||= {name: "Reposts", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:reposts)}
+  def likes_metric
+    single_metric(:likes)
   end
 
-  def bookmarks_metric(minutes = 5)
-    @bookmarks_metric ||= {name: "Bookmarks", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:bookmarks)}
+  def replies_metric
+    single_metric(:replies)
   end
 
-  def views_metric(minutes = 5)
-    @views_metric ||= {name: "Views", data: object.tweet_metrics.group_by_minute(:created_at, series: false, n: minutes).maximum(:views)}
+  def reposts_metric
+    single_metric(:reposts)
+  end
+
+  def bookmarks_metric
+    single_metric(:bookmarks)
+  end
+
+  def views_metric
+    single_metric(:views)
   end
 end
