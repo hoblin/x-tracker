@@ -2,7 +2,7 @@ class TweetDecorator < Draper::Decorator
   delegate_all
 
   def combined_chart
-    h.area_chart combined_metrics_series, height: "40vh", library: chart_options
+    h.area_chart combined_metrics_series, height: "40vh", curve: false, library: chart_options
   end
 
   def likes_chart
@@ -12,6 +12,7 @@ class TweetDecorator < Draper::Decorator
       min: min_y(likes_metric),
       max: max_y(likes_metric),
       height: "60vh",
+      curve: false,
       library: single_metric_chart_options("Likes")
     )
   end
@@ -23,6 +24,7 @@ class TweetDecorator < Draper::Decorator
       min: min_y(replies_metric),
       max: max_y(replies_metric),
       height: "60vh",
+      curve: false,
       library: single_metric_chart_options("Replies")
     )
   end
@@ -34,6 +36,7 @@ class TweetDecorator < Draper::Decorator
       min: min_y(reposts_metric),
       max: max_y(reposts_metric),
       height: "60vh",
+      curve: false,
       library: single_metric_chart_options("Reposts")
     )
   end
@@ -45,6 +48,7 @@ class TweetDecorator < Draper::Decorator
       min: min_y(bookmarks_metric),
       max: max_y(bookmarks_metric),
       height: "60vh",
+      curve: false,
       library: single_metric_chart_options("Bookmarks")
     )
   end
@@ -56,6 +60,7 @@ class TweetDecorator < Draper::Decorator
       min: min_y(views_metric),
       max: max_y(views_metric),
       height: "60vh",
+      curve: false,
       library: single_metric_chart_options("Views")
     )
   end
