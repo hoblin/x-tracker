@@ -1,53 +1,54 @@
-    section.hero.is-info.is-fullheight
-      .hero-head
-        = render "shared/navbar"
-      .hero-body
-        .container
-          .columns.is-centered
-            .column.is-10
-              .box.has-dark-text
-                .content
-                  h1.title.has-text-centered Before you start tracking
-                  p.subtitle.has-text-centered
-                    | X-Tracker provides real-time tweet metrics tracking right in your browser. Here's a brief on how it works:
+- title "Add a Tweet"
+section.hero.is-info.is-fullheight
+  .hero-head
+    = render "shared/navbar"
+  .hero-body
+    .container
+      .columns.is-centered
+        .column.is-10
+          .box.has-dark-text
+            .content
+              h1.title.has-text-centered Before you start tracking
+              p.subtitle.has-text-centered
+                | X-Tracker provides real-time tweet metrics tracking right in your browser. Here's a brief on how it works:
+              ul
+                li
+                  strong> Tampermonkey Extension:
+                  | Our tracker operates through the Tampermonkey browser extension. It's a user script manager that allows the script to interact with the tweet page and send metrics to X-Tracker.
+                li
+                  strong> Tracker Script:
+                  | The tracker script does the magic. Once installed, it observes the tweet page, collects metrics, and sends them to X-Tracker, where you can visualize the data.
+                li
+                  strong> Real-Time Tracking:
+                  | Metrics are updated in real-time. You can start and stop tracking anytime, and analyze the tweet's performance right on X-Tracker.
+              p.has-text-centered.subtitle
+                | Ready to dive in? Follow the steps below:
+
+              ol
+                li
+                  strong Add a Tweet to X-Tracker:
                   ul
-                    li
-                      strong> Tampermonkey Extension:
-                      | Our tracker operates through the Tampermonkey browser extension. It's a user script manager that allows the script to interact with the tweet page and send metrics to X-Tracker.
-                    li
-                      strong> Tracker Script:
-                      | The tracker script does the magic. Once installed, it observes the tweet page, collects metrics, and sends them to X-Tracker, where you can visualize the data.
-                    li
-                      strong> Real-Time Tracking:
-                      | Metrics are updated in real-time. You can start and stop tracking anytime, and analyze the tweet's performance right on X-Tracker.
-                  p.has-text-centered.subtitle
-                    | Ready to dive in? Follow the steps below:
+                    li Input the URL of the tweet you want to track in the form below and click "Submit."
+                    li You'll be redirected to the tweet's page on X-Tracker.
+                li.mt-3
+                  strong Install the Tracker:
+                  ul
+                    li Click the "Install Tracker" button on the tweet's page on X-Tracker. A Tampermonkey window will pop up.
+                    li Click "Install" on the Tampermonkey window to add the tracker script.
+                li.mt-3
+                  strong Start Tracking:
+                  ul
+                    li Now, click the "Start Tracking" button on the tweet's page on X-Tracker.
+                    li The tweet URL will open in a new browser tab.
+                    li A prompt will appear, asking for your permission to send data to X-Tracker. Click "Allow" to start tracking the tweet metrics.
+                    li The tracking will commence, and you can view the metrics on the tweet's page on X-Tracker.
+              p.has-text-centered.subtitle
+                | Install the Tampermonkey extension on your browser to get started:
+              nav.buttons.is-centered
+                - %w(chrome firefox safari edge opera).each do |browser|
+                  a.button.is-link.is-outlined.is-rounded href="https://www.tampermonkey.net/index.php?browser=#{browser}" target="_blank"
+                    span.icon
+                      i.fab class="fa-#{browser}" aria-hidden="true"
+                    span= browser.capitalize
 
-                  ol
-                    li
-                      strong Add a Tweet to X-Tracker:
-                      ul
-                        li Input the URL of the tweet you want to track in the form below and click "Submit."
-                        li You'll be redirected to the tweet's page on X-Tracker.
-                    li.mt-3
-                      strong Install the Tracker:
-                      ul
-                        li Click the "Install Tracker" button on the tweet's page on X-Tracker. A Tampermonkey window will pop up.
-                        li Click "Install" on the Tampermonkey window to add the tracker script.
-                    li.mt-3
-                      strong Start Tracking:
-                      ul
-                        li Now, click the "Start Tracking" button on the tweet's page on X-Tracker.
-                        li The tweet URL will open in a new browser tab.
-                        li A prompt will appear, asking for your permission to send data to X-Tracker. Click "Allow" to start tracking the tweet metrics.
-                        li The tracking will commence, and you can view the metrics on the tweet's page on X-Tracker.
-                  p.has-text-centered.subtitle
-                    | Install the Tampermonkey extension on your browser to get started:
-                  nav.buttons.is-centered
-                    - %w(chrome firefox safari edge opera).each do |browser|
-                      a.button.is-link.is-outlined.is-rounded href="https://www.tampermonkey.net/index.php?browser=#{browser}" target="_blank"
-                        span.icon
-                          i.fab class="fa-#{browser}" aria-hidden="true"
-                        span= browser.capitalize
-
-                  = render partial: 'tweets/form', locals: { tweet: @tweet }
+              = render partial: 'tweets/form', locals: { tweet: @tweet }
