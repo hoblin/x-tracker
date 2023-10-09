@@ -88,7 +88,7 @@ class TweetDecorator < Draper::Decorator
     h.content_tag :div, class: "tags has-addons" do
       [
         h.content_tag(:span, status, class: "tag is-#{style}"),
-        h.content_tag(:span, h.time_ago_in_words(time), class: "tag is-# is-light")
+        h.content_tag(:span, h.time_ago_in_words(time), class: "tag is-#{style} is-light")
       ].join.html_safe
     end
   end
