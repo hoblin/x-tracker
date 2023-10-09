@@ -1,6 +1,7 @@
 class TweetDecorator < Draper::Decorator
   delegate_all
 
+  # CHARTS
   def combined_chart
     h.area_chart combined_metrics_series, height: "40vh", curve: false, library: chart_options
   end
@@ -65,7 +66,32 @@ class TweetDecorator < Draper::Decorator
     )
   end
 
+  # <- CHARTS
+
+  def status_tag
+    last_metric_time = object.tweet_metrics.order(created_at: :desc).first&.created_at
+    case last_metric_time
+    when nil
+      render_status_tag("never tracked", :danger, object.created_at)
+    when 5.minutes.ago..Time.current
+      render_status_tag("tracking", :success, last_metric_time)
+    when 1.hour.ago..4.minutes.ago
+      render_status_tag("delayed", :warning, last_metric_time)
+    else
+      render_status_tag("not tracking", :dark, last_metric_time)
+    end
+  end
+
   private
+
+  def render_status_tag(status, style, time)
+    h.content_tag :div, class: "tags has-addons" do
+      [
+        h.content_tag(:span, status, class: "tag is-#{style}"),
+        h.content_tag(:span, h.time_ago_in_words(time), class: "tag is-# is-light")
+      ].join.html_safe
+    end
+  end
 
   def min_y(metric)
     metric[:data].min_by { |k, v| k.to_i }&.last

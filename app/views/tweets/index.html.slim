@@ -50,6 +50,9 @@ section.hero.is-info
                     .title.is-4
                       = link_to tweet.author_name, tweet.url, target: "_blank"
                 .content
+                  .field.is-grouped.is-grouped-multiline.mb-1
+                    .control
+                      = tweet.status_tag
                   = tweet.body&.truncate(280)
               .card-footer
                 = link_to tweet_path(tweet), class: "card-footer-item primary" do
