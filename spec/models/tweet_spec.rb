@@ -4,6 +4,7 @@
 #
 #  id         :bigint           not null, primary key
 #  author     :string
+#  avatar     :string
 #  body       :text
 #  url        :string           not null
 #  uuid       :uuid             not null

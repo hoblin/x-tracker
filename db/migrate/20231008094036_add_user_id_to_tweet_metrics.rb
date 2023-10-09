@@ -2,7 +2,7 @@ class AddUserIdToTweetMetrics < ActiveRecord::Migration[7.1]
   def up
     add_column :tweet_metrics, :user_id, :bigint
 
-    first_user_id = execute("SELECT id FROM users ORDER BY created_at ASC LIMIT 1").first["id"]
+    first_user_id = execute("SELECT id FROM users ORDER BY created_at ASC LIMIT 1")&.first&.fetch("id")
 
     raise "No users found" if first_user_id.nil?
 
