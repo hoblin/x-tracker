@@ -75,7 +75,7 @@ class TweetDecorator < Draper::Decorator
       render_status_tag("never tracked", :danger, object.created_at)
     when 5.minutes.ago..Time.current
       render_status_tag("tracking", :success, last_metric_time)
-    when 1.hour.ago..4.minutes.ago
+    when 1.hour.ago..5.minutes.ago
       render_status_tag("delayed", :warning, last_metric_time)
     else
       render_status_tag("not tracking", :dark, last_metric_time)
