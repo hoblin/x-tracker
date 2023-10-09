@@ -4,11 +4,17 @@
 #
 #  id         :bigint           not null, primary key
 #  author     :string
+#  avatar     :string
 #  body       :text
 #  url        :string           not null
+#  uuid       :uuid             not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #  user_id    :bigint           not null
+#
+# Indexes
+#
+#  index_tweets_on_uuid  (uuid) UNIQUE
 #
 # Foreign Keys
 #

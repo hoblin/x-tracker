@@ -2,6 +2,8 @@
 
 class CreateAdminUser < ActiveRecord::Migration[7.1]
   def up
+    return if User.exists?(username: Rails.application.credentials.admin_user.username)
+
     User.create! do |u|
       u.username = Rails.application.credentials.admin_user.username
       u.password = Rails.application.credentials.admin_user.password
