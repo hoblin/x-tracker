@@ -32,6 +32,14 @@ RSpec.describe TweetMetric, type: :model do
       expect(association.macro).to eq(:belongs_to)
     end
 
+    it "touches the tweet" do
+      tweet = create(:tweet, created_at: 1.hour.ago, updated_at: 1.hour.ago)
+
+      expect {
+        create(:tweet_metric, tweet: tweet)
+      }.to change { tweet.updated_at }
+    end
+
     it "belongs to a user" do
       association = described_class.reflect_on_association(:user)
       expect(association.macro).to eq(:belongs_to)

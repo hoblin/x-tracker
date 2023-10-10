@@ -1,0 +1,22 @@
+.card
+  .card-content
+    .media
+      .media-left
+        figure class="image is-48x48"
+          img src="#{tweet.author_avatar_url}" class="is-rounded"
+      .media-content
+        p class="title is-4"
+          = link_to tweet.author_name, tweet.author_url, target: "_blank"
+        p class="subtitle is-6"
+          = tweet.body&.truncate(280)
+    .content
+      = tweet.combined_chart
+  footer.card-footer
+    = link_to tweet_path(tweet), class: "card-footer-item primary" do
+      span View Metrics
+      span.icon
+        i class="fa fa-chart-line"
+    = link_to tweet.url, class: "card-footer-item", target: "_blank" do
+      span View Tweet
+      span.icon
+        i class="fa fa-twitter"

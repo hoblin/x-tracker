@@ -1,6 +1,6 @@
 class TweetsController < ApplicationController
   skip_forgery_protection only: %i[track receive_metrics]  # Skip CSRF protection for Tampermonkey POST requests
-  caches_action :index, :show, expires_in: 5.minutes
+  caches_action :show, expires_in: 5.minutes
   before_action :authenticate_user!, only: %i[new create track]
 
   def index
@@ -37,7 +37,6 @@ class TweetsController < ApplicationController
     @tweet = current_user.tweets.new(create_tweet_params)
 
     if @tweet.save
-      expire_action action: :index
       redirect_to @tweet
     else
       respond_to do |format|
@@ -55,8 +54,7 @@ class TweetsController < ApplicationController
 
     tweet.update!(tweet_params.except(:uuid)) if tweet_params[:body].present?
 
-    if tweet.tweet_metrics.count < 10
-      expire_action action: :index
+    if tweet.tweet_metrics.count < 50
       expire_action action: :show, id: tweet.id
     end
 
