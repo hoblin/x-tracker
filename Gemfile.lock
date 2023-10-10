@@ -176,6 +176,7 @@ GEM
       timeout
     net-smtp (0.4.0)
       net-protocol
+    newrelic_rpm (9.5.0)
     nio4r (2.5.9)
     nokogiri (1.15.4)
       mini_portile2 (~> 2.8.2)
@@ -363,6 +364,7 @@ DEPENDENCIES
   fuubar (~> 2.5)
   groupdate (~> 6.4)
   jsbundling-rails
+  newrelic_rpm (~> 9.5)
   ordinare (~> 0.4.0)
   pg (~> 1.1)
   pry (~> 0.14.2)
