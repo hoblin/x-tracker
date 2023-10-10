@@ -24,6 +24,6 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class TweetMetric < ApplicationRecord
-  belongs_to :tweet
+  belongs_to :tweet, touch: true
   belongs_to :user
 end

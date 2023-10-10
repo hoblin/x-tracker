@@ -10,56 +10,10 @@ section.hero.is-info
     .column.is-10
       .section
         = link_to 'Add Tweet', new_tweet_path, class: 'button is-primary is-fullwidth is-large'
-      - @tweets.each do |tweet|
-          .card
-            .card-content
-              .media
-                .media-left
-                  figure class="image is-48x48"
-                    img src="#{tweet.author_avatar_url}" class="is-rounded"
-                .media-content
-                  p class="title is-4"
-                    = link_to tweet.author_name, tweet.author_url, target: "_blank"
-                  p class="subtitle is-6"
-                    = tweet.body&.truncate(280)
-              .content
-                = tweet.combined_chart
-            footer.card-footer
-              = link_to tweet_path(tweet), class: "card-footer-item primary" do
-                span View Metrics
-                span.icon
-                  i class="fa fa-chart-line"
-              = link_to tweet.url, class: "card-footer-item", target: "_blank" do
-                span View Tweet
-                span.icon
-                  i class="fa fa-twitter"
+      = render partial: "combined_chart_tweet", collection: @tweets, as: :tweet, cached: true
     .column.is-1
   / Display other tweets as cards
   .columns.is-centered
     .column.is-10
       .columns.is-centered.is-multiline
-        - @other_tweets.each do |tweet|
-          .column.is-3.is-flex.is-flex-direction-column
-            .card.is-flex.is-flex-direction-column.is-flex-grow-1
-              .card-content.is-flex.is-flex-direction-column.is-flex-grow-1
-                .media
-                  .media-left
-                    figure class="image is-48x48"
-                      img src="#{tweet.author_avatar_url}" class="is-rounded"
-                  .media-content
-                    .title.is-4
-                      = link_to tweet.author_name, tweet.url, target: "_blank"
-                .content
-                  .field.is-grouped.is-grouped-multiline.mb-1
-                    .control
-                      = tweet.status_tag
-                  = tweet.body&.truncate(280)
-              .card-footer
-                = link_to tweet_path(tweet), class: "card-footer-item primary" do
-                  span View Metrics
-                  span.icon
-                    i class="fa fa-chart-line"
-                = link_to tweet.url, class: "card-footer-item", target: "_blank" do
-                  span View Tweet
-                  span.icon
-                    i class="fa fa-twitter"
+        = render partial: "tweet_card", collection: @other_tweets, as: :tweet
